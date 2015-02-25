@@ -132,23 +132,7 @@ return array(
         */
 
         'exactWordSearch' => false,
-        
-        /*
-        |--------------------------------------------------------------------------
-        | Enable to display all records.  
-        |--------------------------------------------------------------------------
-        |
-        | Be careful! It may be overloaded with large record.
-        | Supported: boolean
-        |
-        */
-        'enableDisplayAll' => false,
-        /*
-        |--------------------------------------------------------------------------
-        | Limit display when iDisplayLength invaild
-        |--------------------------------------------------------------------------
-        */
-        'defaultDisplayLength' => 10,
+
     )
 
 
