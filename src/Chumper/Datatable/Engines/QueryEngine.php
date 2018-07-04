@@ -165,7 +165,7 @@ class QueryEngine extends BaseEngine {
     private function buildSearchQuery($builder, $columns)
     {
         if (method_exists($builder, 'scopeSearch')) {
-            $builder = $builder->search($this->search);
+            $builder = $builder->newQuery()->search($this->search);
         } else {
             $like = $this->options['searchOperator'];
             $search = $this->search;
@@ -191,7 +191,7 @@ class QueryEngine extends BaseEngine {
      * @param $builder
      * Modified by sburkett to facilitate individual exact match searching on individual columns (rather than for all columns)
      */
-     
+
     private function buildSingleColumnSearches($builder)
     {
       foreach ($this->columnSearches as $index => $searchValue) {
