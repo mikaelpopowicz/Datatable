@@ -1,42 +1,40 @@
 <?php
 
 use Chumper\Datatable\Table;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\View;
+use PHPUnit\Framework\TestCase;
 
-class TableTest extends PHPUnit_Framework_TestCase {
-
+class TableTest extends TestCase
+{
     /**
      * @var Table
      */
     private $table;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        Config::shouldReceive('get')->zeroOrMoreTimes()->with("chumper_datatable.table")->andReturn(
-            array(
-                'class' => 'table table-bordered',
-                'id' => '',
-                'options' => array(
-                    "sPaginationType" => "full_numbers",
-                    "bProcessing" => false
-                ),
-                'callbacks' => array(),
-                'noScript' => false,
-                'table_view' => 'datatable::template',
-                'script_view' => 'datatable::javascript',
-            )
-        );
+        Config::set('chumper_datatable.table', [
+            'class' => 'table table-bordered',
+            'id' => 'table-id',
+            'options' => [
+                "sPaginationType" => "full_numbers",
+                "bProcessing" => false
+            ],
+            'callbacks' => [],
+            'noScript' => false,
+            'table_view' => 'datatable::template',
+            'script_view' => 'datatable::javascript',
+        ]);
 
         $this->table = new Table();
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testSetOptions()
     {
+        $this->expectException(\Exception::class);
         $this->table->setOptions('foo','bar');
 
         $this->table->setOptions(array(
@@ -47,11 +45,9 @@ class TableTest extends PHPUnit_Framework_TestCase {
         $this->table->setOptions('foo', 'bar', 'baz');
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testSetCallbacks()
     {
+        $this->expectException(\Exception::class);
         $this->table->setCallbacks('foo', 'bar');
         $this->assertArrayHasKey('foo', $this->table->getCallbacks());
 
@@ -66,11 +62,9 @@ class TableTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue(False);  // should throw exception before here
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testSetCustomValues()
     {
+        $this->expectException(\Exception::class);
         $this->table->setCustomValues('foo', 'bar');
         $this->assertArrayHasKey('foo', $this->table->getCustomValues());
 
@@ -102,25 +96,24 @@ class TableTest extends PHPUnit_Framework_TestCase {
 
     public function testRender()
     {
-        Request::shouldReceive('url')->once()->andReturn('fooBar');
-
-        View::shouldReceive('make')->once()
-            ->with('datatable::template', array(
-                'options'   => array(
-                    'sAjaxSource' => 'fooBar',
+        View::shouldReceive('make')
+            ->once()
+            ->with('datatable::template', [
+                'options'   => [
+                    'sPaginationType' => 'full_numbers',
+                    'bProcessing' => false,
+                    'sAjaxSource' => 'http://localhost',
                     'bServerSide' => true,
-                    'sPaginationType'=>'full_numbers',
-                    'bProcessing'=>false
-                ),
-                'callbacks' => array(),
-                'values'    => array(),
-                'data'      => array(),
-                'columns'   => array(1=>'foo'),
+                ],
+                'callbacks' => [],
+                'values'    => [],
+                'data'      => [],
+                'columns'   => [1 => 'foo'],
                 'noScript'  => false,
                 'class'     => $this->table->getClass(),
                 'id'        => $this->table->getId(),
-
-            ))->andReturn(true);
+            ])
+            ->andReturn(true);
 
         $table1 = $this->table->addColumn('foo')->render();
 
@@ -157,7 +150,7 @@ class TableTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('foo/url',$return['sAjaxSource']);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }

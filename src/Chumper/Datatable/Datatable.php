@@ -1,9 +1,11 @@
-<?php namespace Chumper\Datatable;
+<?php
+
+namespace Chumper\Datatable;
 
 use Chumper\Datatable\Engines\CollectionEngine;
 use Chumper\Datatable\Engines\QueryEngine;
-use Input;
-use Request;
+use Illuminate\Support\Facades\Input;
+
 
 /**
  * Class Datatable
@@ -11,11 +13,14 @@ use Request;
  */
 class Datatable {
 
-    private $columnNames = array();
+    /**
+     * @var array
+     */
+    private $columnNames = [];
 
     /**
      * @param $query
-     * @return QueryEngine
+     * @return \Chumper\Datatable\Engines\QueryEngine
      */
     public function query($query)
     {
@@ -23,8 +28,8 @@ class Datatable {
     }
 
     /**
-     * @param $collection
-     * @return CollectionEngine
+     * @param \Illuminate\Support\Collection $collection
+     * @return \Chumper\Datatable\Engines\CollectionEngine
      */
     public function collection($collection)
     {
@@ -32,7 +37,7 @@ class Datatable {
     }
 
     /**
-     * @return Table
+     * @return \Chumper\Datatable\Table
      */
     public function table()
     {
@@ -45,10 +50,7 @@ class Datatable {
     public function shouldHandle()
     {
         $echo = Input::get('sEcho',null);
-        if(/*Request::ajax() && */!is_null($echo) && is_numeric($echo))
-        {
-            return true;
-        }
-        return false;
+
+        return !is_null($echo) && is_numeric($echo);
     }
 }

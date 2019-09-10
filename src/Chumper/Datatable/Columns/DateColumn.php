@@ -1,7 +1,9 @@
-<?php namespace Chumper\Datatable\Columns;
+<?php
 
-class DateColumn extends BaseColumn {
+namespace Chumper\Datatable\Columns;
 
+class DateColumn extends BaseColumn
+{
     /**
      * Constants for the time representation
      */

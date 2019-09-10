@@ -1,9 +1,11 @@
-<?php namespace Chumper\Datatable\Columns;
+<?php
 
-use Carbon\Carbon;
+namespace Chumper\Datatable\Columns;
+
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
-class DateColumnTest extends \PHPUnit_Framework_TestCase {
+class DateColumnTest extends TestCase {
 
     public function testAll()
     {
@@ -48,9 +50,8 @@ class DateColumnTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('fooBar', $column6->run(array('foo' => $c)));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }
 }
- 

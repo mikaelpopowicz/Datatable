@@ -1,10 +1,12 @@
-<?php namespace Chumper\Datatable;
+<?php
 
+namespace Chumper\Datatable;
+
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use View;
 
-class DatatableServiceProvider extends ServiceProvider {
-
+class DatatableServiceProvider extends ServiceProvider
+{
 	/**
 	 * Indicates if loading of the provider is deferred.
 	 *
@@ -31,8 +33,7 @@ class DatatableServiceProvider extends ServiceProvider {
 	 */
     public function register()
     {
-        $this->app['datatable'] = $this->app->share(function($app)
-        {
+        $this->app->bind('datatable', function (Application $app) {
             return new Datatable;
         });
     }

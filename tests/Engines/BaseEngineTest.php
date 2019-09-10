@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Input;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Config;
 
-class BaseEngineTest extends TestCase {
+class BaseEngineTest extends TestCase
+{
 
     private $collection;
 
@@ -15,7 +16,7 @@ class BaseEngineTest extends TestCase {
      */
     private $engine;
 
-    public function setUp()
+    public function setUp(): void
     {
         // set up config
         Config::shouldReceive('get')->zeroOrMoreTimes()->with("chumper_datatable.engine")->andReturn(
@@ -28,12 +29,9 @@ class BaseEngineTest extends TestCase {
         $this->engine = new CollectionEngine($this->collection);
     }
 
-
-    /**
-     * @expectedException Exception
-     */
     public function testAddColumn()
     {
+        $this->expectException(\Exception::class);
         $this->engine->addColumn('foo', 'bar');
 
         $this->assertInstanceOf(
@@ -110,4 +108,3 @@ class BaseEngineTest extends TestCase {
         $this->assertEquals(array('id','name','email', 'foo', 'bar'), $this->engine->getOrder());
     }
 }
- 

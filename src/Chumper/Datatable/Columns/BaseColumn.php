@@ -1,10 +1,13 @@
-<?php namespace Chumper\Datatable\Columns;
+<?php
+
+namespace Chumper\Datatable\Columns;
 
 /**
  * Class BaseColumn
  * @package Chumper\Datatable\Columns
  */
-abstract class BaseColumn {
+abstract class BaseColumn
+{
 
     /**
      * @var String name of the column

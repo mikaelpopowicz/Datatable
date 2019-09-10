@@ -3,15 +3,16 @@
 use Chumper\Datatable\Datatable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\TestCase;
 
-class DatatableTest extends PHPUnit_Framework_TestCase {
-
+class DatatableTest extends TestCase
+{
     /**
      * @var Datatable
      */
     private $dt;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         // set up config
         Config::shouldReceive('get')->zeroOrMoreTimes()->with("chumper_datatable.engine")->andReturn(

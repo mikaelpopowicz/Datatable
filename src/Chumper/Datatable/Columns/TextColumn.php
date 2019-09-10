@@ -1,7 +1,9 @@
-<?php namespace Chumper\Datatable\Columns;
+<?php
 
-class TextColumn extends BaseColumn {
+namespace Chumper\Datatable\Columns;
 
+class TextColumn extends BaseColumn
+{
     private $text;
 
     function __construct($name, $text)

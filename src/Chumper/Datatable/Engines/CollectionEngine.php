@@ -1,6 +1,9 @@
-<?php namespace Chumper\Datatable\Engines;
+<?php
+
+namespace Chumper\Datatable\Engines;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 /**
  * This handles the collections,
@@ -10,8 +13,8 @@ use Illuminate\Support\Collection;
  * Class CollectionEngine
  * @package Chumper\Datatable\Engines
  */
-class CollectionEngine extends BaseEngine {
-
+class CollectionEngine extends BaseEngine
+{
     /**
      * @var \Illuminate\Support\Collection
      */
@@ -123,7 +126,7 @@ class CollectionEngine extends BaseEngine {
         $this->doInternalSearch($columns, $searchColumns);
         $this->doInternalOrder();
 
-        return $this->workingCollection->slice($this->skip,$this->limit);
+        return $this->workingCollection->slice($this->skip,$this->limit)->values();
     }
 
     private function doInternalSearch(Collection $columns, array $searchColumns)
@@ -178,7 +181,7 @@ class CollectionEngine extends BaseEngine {
                     }
                     else
                     {
-                        if(str_contains($search,$value))
+                        if(Str::contains($search,$value))
                             return true;
                     }
                 }
@@ -191,7 +194,7 @@ class CollectionEngine extends BaseEngine {
                     }
                     else
                     {
-                        if(str_contains(strtolower($search),strtolower($value)))
+                        if(Str::contains(strtolower($search),strtolower($value)))
                             return true;
                     }
                 }
@@ -207,28 +210,22 @@ class CollectionEngine extends BaseEngine {
         $column = $this->orderColumn[0];
         $stripOrder = $this->options['stripOrder'];
         $self = $this;
-        $this->workingCollection->sortBy(function($row) use ($column,$stripOrder,$self) {
 
-            if($self->getAliasMapping())
-            {
-                $column = $self->getNameByIndex($column);
-            }
-            if($stripOrder)
-            {
-                if(is_callable($stripOrder)){
-                    return $stripOrder($row, $column);
-                }else{
-                    return strip_tags($row[$column]);
-                }
-            }
-            else
-            {
-                return $row[$column];
+        $this->workingCollection = $this->workingCollection->sortBy(function($row) use ($column,$stripOrder,$self) {
+            $column = $this->getAliasMapping() ? $self->getNameByIndex($column) : $column;
+
+            $value = $row[$column];
+
+            if($stripOrder) {
+                return is_callable($stripOrder) ? $stripOrder($row, $column) : strip_tags($value);
+            } else {
+                return $value;
             }
         }, SORT_NATURAL);
 
-        if($this->orderDirection == BaseEngine::ORDER_DESC)
+        if($this->orderDirection == BaseEngine::ORDER_DESC) {
             $this->workingCollection = $this->workingCollection->reverse();
+        }
     }
 
     private function compileArray($columns)

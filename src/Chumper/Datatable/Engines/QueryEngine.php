@@ -1,12 +1,13 @@
-<?php namespace Chumper\Datatable\Engines;
+<?php
 
-use Chumper\Datatable\Datatable;
+namespace Chumper\Datatable\Engines;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 
-class QueryEngine extends BaseEngine {
-
+class QueryEngine extends BaseEngine
+{
     /**
      * @var Builder
      */

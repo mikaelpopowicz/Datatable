@@ -1,9 +1,10 @@
 <?php
 
 use Chumper\Datatable\Columns\FunctionColumn;
+use PHPUnit\Framework\TestCase;
 
-class FunctionColumnTest extends PHPUnit_Framework_TestCase {
-
+class FunctionColumnTest extends TestCase
+{
     public function testSimple()
     {
         $column = new FunctionColumn('foo',function($model){

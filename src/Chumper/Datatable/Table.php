@@ -1,9 +1,12 @@
-<?php namespace Chumper\Datatable;
+<?php
+
+namespace Chumper\Datatable;
 
 use Exception;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 
 /**
  * Class Table
@@ -297,7 +300,7 @@ class Table {
             $this->createMapping();
         }
 
-        return View::make($this->table_view,array(
+        return View::make($this->table_view, [
             'options'   => $this->options,
             'callbacks' => $this->callbacks,
             'values'    => $this->customValues,
@@ -306,7 +309,7 @@ class Table {
             'noScript'  => $this->noScript,
             'id'        => $this->idName,
             'class'     => $this->className,
-        ));
+        ]);
     }
 
     /**
@@ -345,7 +348,7 @@ class Table {
 
     public function setId($id = '')
     {
-        $this->idName = empty($id)? str_random(8) : $id;
+        $this->idName = empty($id)? Str::random(8) : $id;
         return $this;
     }
 

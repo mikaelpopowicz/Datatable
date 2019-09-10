@@ -2,12 +2,16 @@
 
 use Chumper\Datatable\Columns\FunctionColumn;
 use Chumper\Datatable\Engines\BaseEngine;
-use Chumper\Datatable\Engines\EngineInterface;
 use Chumper\Datatable\Engines\QueryEngine;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
+use PHPUnit\Framework\TestCase;
 
-class QueryEngineTest extends PHPUnit_Framework_TestCase {
-
+class QueryEngineTest extends TestCase
+{
     /**
      * @var QueryEngine
      */
@@ -18,17 +22,12 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
      */
     public $builder;
 
-    public function setUp()
+    public function setUp(): void
     {
+        parent::setUp();
 
-        Config::shouldReceive('get')->zeroOrMoreTimes()->with("chumper_datatable.engine")->andReturn(
-            array(
-                'exactWordSearch' => false,
-            )
-        );
-
+        Config::set('chumper_datatable.engine.exactWordSearch', false);
         $this->builder = Mockery::mock('Illuminate\Database\Query\Builder');
-
         $this->c = new QueryEngine($this->builder);
     }
 
@@ -36,7 +35,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
     {
         $this->builder->shouldReceive('orderBy')->with('id', BaseEngine::ORDER_ASC);
 
-        Input::merge(
+        Request::merge(
             array(
                 'iSortCol_0' => 0,
                 'sSortDir_0' => 'asc'
@@ -47,7 +46,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
 
         $this->builder->shouldReceive('orderBy')->with('id', BaseEngine::ORDER_DESC);
 
-        Input::merge(
+        Request::merge(
             array(
                 'iSortCol_0' => 0,
                 'sSortDir_0' => 'desc'
@@ -68,7 +67,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
         $this->addRealColumns($this->c);
         $this->c->searchColumns('foo');
 
-        Input::merge(
+        Request::merge(
             array(
                 'sSearch' => 'test'
             )
@@ -89,7 +88,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
 
         $this->addRealColumns($this->c);
 
-        Input::merge(
+        Request::merge(
             array(
                 'iDisplayStart' => 1,
                 'sSearch' => null
@@ -113,7 +112,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
 
         $this->addRealColumns($this->c);
 
-        Input::merge(
+        Request::merge(
             array(
                 'iDisplayLength' => 1,
                 'sSearch' => null,
@@ -141,7 +140,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
         $engine->searchColumns('foo','bar');
         $engine->setAliasMapping();
 
-        Input::replace(
+        Request::replace(
             array(
                 'sSearch' => 't',
             )
@@ -160,7 +159,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
         $engine->searchColumns('foo','bar');
         $engine->setAliasMapping();
 
-        Input::replace(
+        Request::replace(
             array(
                 'sSearch' => 'plasch',
             )
@@ -179,7 +178,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
         $engine->searchColumns('foo','bar');
         $engine->setAliasMapping();
 
-        Input::replace(
+        Request::replace(
             array(
                 'sSearch' => 'tay',
             )
@@ -198,7 +197,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
         $engine->searchColumns('foo','bar');
         $engine->setAliasMapping();
 
-        Input::replace(
+        Request::replace(
             array(
                 'sSearch' => '0',
             )
@@ -211,7 +210,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($this->arrayHasKeyValue('foo','Taylor',$test));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }
@@ -238,10 +237,10 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
 
     private function arrayHasKeyValue($key,$value,$array)
     {
-        $array = array_pluck($array,$key);
+        $array = Arr::pluck($array,$key);
         foreach ($array as $val)
         {
-            if(str_contains($val, $value))
+            if(Str::contains($val, $value))
                 return true;
         }
         return false;
